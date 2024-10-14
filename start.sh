@@ -39,10 +39,13 @@ ngrok tcp 5900 --region=in &
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -configure -access -on -users runneradmin -privs -all -restart -agent -console
 
 # Check screen recording permissions
-sudo tccutil reset ScreenCapture
+sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT INTO access VALUES('kTCCServiceScreenCapture','com.apple.Terminal',0,1,1,NULL,NULL,NULL,NULL,NULL)"
 
-# Grant accessibility permissions
-sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT INTO access VALUES('kTCCServiceAccessibility','com.apple.Terminal',0,1,1,NULL,NULL,NULL,NULL,NULL)"
+# Restart Remote Management
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -restart -agent -console
 
 # Check firewall settings
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /System/Library/CoreServices/RemoteManagement/ARDAgent.app
+
+# Restart the machine
+sudo reboot
