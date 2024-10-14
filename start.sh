@@ -35,17 +35,10 @@ ngrok authtoken $1
 ngrok tcp 5900 --region=in &
 
 # Additional commands to fix potential issues
-# Ensure Remote Management is enabled
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -configure -access -on -users runneradmin -privs -all -restart -agent -console
-
-# Check screen recording permissions
 sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT INTO access VALUES('kTCCServiceScreenCapture','com.apple.Terminal',0,1,1,NULL,NULL,NULL,NULL,NULL)"
-
-# Restart Remote Management
-sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -restart -agent -console
-
-# Check firewall settings
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /System/Library/CoreServices/RemoteManagement/ARDAgent.app
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 
 # Restart the machine
 sudo reboot
