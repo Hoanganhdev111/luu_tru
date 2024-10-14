@@ -35,7 +35,7 @@ brew install --cask ngrok
 
 # Configure ngrok and start it
 ngrok authtoken $1
-ngrok tcp 5900 --region=in &
+ngrok tcp 5900 &
 
-# Restart the machine
+# Restart the machine to apply changes
 sudo reboot
