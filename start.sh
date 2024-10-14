@@ -26,9 +26,11 @@ echo runnerrdp | perl -we 'BEGIN { @k = unpack "C*", pack "H*", "1734516E8BA8C5E
 sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT INTO access VALUES('kTCCServiceScreenCapture','/System/Library/CoreServices/RemoteManagement/ARDAgent.app',0,1,1,NULL,NULL,NULL,NULL,NULL)"
 sudo tccutil reset ScreenCapture
 
+# Ensure Remote Management is active
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate
+
 # Start VNC/reset changes
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -restart -agent -console
-sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate
 
 # Install ngrok
 brew install --cask ngrok
