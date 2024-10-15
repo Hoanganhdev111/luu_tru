@@ -23,14 +23,13 @@ sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resourc
 echo runnerrdp | perl -we 'BEGIN { @k = unpack "C*", pack "H*", "1734516E8BA8C5E2FF1C39567390ADCA"}; $_ = <>; chomp; s/^(.{8}).*/$1/; @p = unpack "C*", $_; foreach (@k) { printf "%02X", $_ ^ (shift @p || 0) }; print "\n"' | sudo tee /Library/Preferences/com.apple.VNCSettings.txt
 
 # Grant screen recording permission
-sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT INTO access VALUES('kTCCServiceScreenCapture','/System/Library/CoreServices/RemoteManagement/ARDAgent.app',0,1,1,NULL,NULL,NULL,NULL,NULL)"
+# Note: Modify the query to match the correct number of columns
+sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT INTO access VALUES(NULL, 'kTCCServiceScreenCapture','/System/Library/CoreServices/RemoteManagement/ARDAgent.app',0,1,1,NULL,NULL,NULL,NULL,NULL)"
 sudo tccutil reset ScreenCapture
-
-# Ensure Remote Management is active
-sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate
 
 # Start VNC/reset changes
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -restart -agent -console
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate
 
 # Install ngrok
 brew install --cask ngrok
