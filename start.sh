@@ -15,28 +15,19 @@ sudo dscl . -passwd /Users/runneradmin P@ssw0rd!
 sudo createhomedir -c -u runneradmin > /dev/null
 sudo dscl . -append /Groups/admin GroupMembership runneradmin
 
-# Enable VNC
+# Enable Remote Management
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -configure -allowAccessFor -allUsers -privs -all
-sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -configure -clientopts -setvnclegacy -vnclegacy yes 
 
-# Set VNC password
-echo runnerrdp | perl -we 'BEGIN { @k = unpack "C*", pack "H*", "1734516E8BA8C5E2FF1C39567390ADCA"}; $_ = <>; chomp; s/^(.{8}).*/$1/; @p = unpack "C*", $_; foreach (@k) { printf "%02X", $_ ^ (shift @p || 0) }; print "\n"' | sudo tee /Library/Preferences/com.apple.VNCSettings.txt
-
-# Grant screen recording permission
-# Note: Modify the query to match the correct number of columns
-sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT INTO access VALUES(NULL, 'kTCCServiceScreenCapture','/System/Library/CoreServices/RemoteManagement/ARDAgent.app',0,1,1,NULL,NULL,NULL,NULL,NULL)"
-sudo tccutil reset ScreenCapture
-
-# Start VNC/reset changes
+# Start Remote Management/reset changes
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -restart -agent -console
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate
 
-# Install ngrok
+# Install ngrok for remote access (optional)
 brew install --cask ngrok
 
 # Configure ngrok and start it
 ngrok authtoken $1
-ngrok tcp 5900 &
+ngrok tcp 3389 &  # RDP uses port 3389
 
 # Restart the machine to apply changes (optional)
 # sudo reboot
